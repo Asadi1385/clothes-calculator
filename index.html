@@ -197,12 +197,14 @@
       let total = dookht + barchasb + ghimatParche;
 
       document.getElementById('result').innerHTML = `
-        <p><strong>قیمت پارچه:</strong> ${ghimatParche.toFixed(2)}</p>
-        <p><strong>قیمت کل:</strong> ${total.toFixed(2)}</p>
-        <p>🔹 تعداد کشباف‌ها: ${items.length}</p>
-        <p>🎩 کلاه: ${kolah > 0 ? kolah.toFixed(2) + ' (دارد)' : 'ندارد'}</p>
-        <p>👕 آستین: ${astinGheymat.toFixed(2)}</p>
-      `;
+  <p><strong>قیمت پارچه (بدون کشباف):</strong> ${(ghimatParche - keshbafTotalPrice).toFixed(2)}</p>
+  <p><strong>قیمت کشباف:</strong> ${keshbafTotalPrice.toFixed(2)}</p>
+  <p><strong>قیمت کل:</strong> ${total.toFixed(2)}</p>
+  <p>🔹 تعداد کشباف‌ها: ${items.length}</p>
+  <p>🎩 کلاه: ${kolah > 0 ? kolah.toFixed(2) + ' (دارد)' : 'ندارد'}</p>
+  <p>👕 آستین: ${astinGheymat.toFixed(2)}</p>
+`;
+
     }
   </script>
 </body>
