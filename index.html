@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +15,18 @@
       padding: 20px;
       direction: rtl;
     }
-    h1 { text-align: center; color: #444; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
+
+    h1 {
+      text-align: center;
+      color: #444;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
     input {
       width: 100%;
       padding: 8px;
@@ -23,6 +34,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     button {
       margin-top: 15px;
       padding: 10px;
@@ -34,14 +46,19 @@
       font-size: 16px;
       cursor: pointer;
     }
-    button:hover { background: #005fa3; }
+
+    button:hover {
+      background: #005fa3;
+    }
+
     .result {
       margin-top: 20px;
       background: white;
       padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
     .keshbaf-item {
       background: #fff;
       border: 1px solid #ddd;
@@ -51,6 +68,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1>محاسبه‌گر قیمت پارچه</h1>
 
@@ -85,6 +103,9 @@
   </div>
 
   <hr>
+
+  <label>قیمت پایه کشباف (هر متر):</label>
+  <input type="number" id="keshbafPrice" step="any" />
 
   <h3>کشباف‌ها</h3>
   <button type="button" onclick="addKeshbaf()">➕ افزودن کشباف</button>
@@ -138,6 +159,8 @@
       let arze = parseFloat(document.getElementById('arze').value) || 0;
       let astin = parseFloat(document.getElementById('astin').value) || 0;
       let astinarz = parseFloat(document.getElementById('astinarz').value) || 0;
+      let keshbafPrice = parseFloat(document.getElementById('keshbafPrice').value) || 0;
+
 
       // محاسبه آستین (جدید)
       let astinGheymat = (astin * tool) * (astinarz / arz);
@@ -159,7 +182,7 @@
       items.forEach((item) => {
         const keshbafe = parseFloat(item.querySelector(`[id^="keshbafe_"]`).value) || 0;
         const keshbafearz = parseFloat(item.querySelector(`[id^="keshbafearz_"]`).value) || 0;
-        keshbaf += (360 * keshbafe) * (keshbafearz / 0.63);
+        keshbaf += (keshbafPrice * keshbafe) * (keshbafearz / 0.63);
       });
 
       ghimatParche += keshbaf;
@@ -183,4 +206,5 @@
     }
   </script>
 </body>
+
 </html>
