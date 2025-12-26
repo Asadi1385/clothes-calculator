@@ -70,6 +70,7 @@
 </head>
 
 <body>
+
   <h1>محاسبه‌گر قیمت پارچه</h1>
 
   <label>قیمت هر متر پارچه:</label>
@@ -87,6 +88,7 @@
   <h3>آستین</h3>
   <label>طول آستین:</label>
   <input type="number" id="astin" step="any" />
+
   <label>عرض آستین:</label>
   <input type="number" id="astinarz" step="any" />
 
@@ -94,18 +96,20 @@
 
   <h3>کلاه</h3>
   <label>آیا کلاه دارد؟ (بله = 0، خیر = 1)</label>
-  <input type="number" id="hasKolah" min="0" max="1" step="1" value="1" />
+  <input type="number" id="hasKolah" value="1" min="0" max="1">
+
   <div id="kolahInputs" style="display:none;">
-    <label>طول پارچه استفاده شده برای کلاه:</label>
-    <input type="number" id="tkolah" step="any" />
-    <label>عرض پارچه استفاده شده برای کلاه:</label>
-    <input type="number" id="akolah" step="any" />
+    <label>طول پارچه کلاه:</label>
+    <input type="number" id="tkolah" step="any">
+
+    <label>عرض پارچه کلاه:</label>
+    <input type="number" id="akolah" step="any">
   </div>
 
   <hr>
 
   <label>قیمت پایه کشباف (هر متر):</label>
-  <input type="number" id="keshbafPrice" step="any" />
+  <input type="number" id="keshbafPrice" step="any">
 
   <h3>کشباف‌ها</h3>
   <button type="button" onclick="addKeshbaf()">➕ افزودن کشباف</button>
@@ -114,10 +118,10 @@
   <hr>
 
   <label>قیمت برچسب:</label>
-  <input type="number" id="barchasb" step="any" />
+  <input type="number" id="barchasb" step="any">
 
   <label>قیمت دوخت:</label>
-  <input type="number" id="dookht" step="any" />
+  <input type="number" id="dookht" step="any">
 
   <button onclick="calculate()">محاسبه نهایی</button>
 
@@ -140,73 +144,60 @@
       div.innerHTML = `
         <h4>کشباف ${keshbafCount}</h4>
         <label>طول کشباف:</label>
-        <input type="number" id="keshbafe_${keshbafCount}" step="any" />
+        <input type="number" class="keshbafe" step="any">
+
         <label>عرض کشباف:</label>
-        <input type="number" id="keshbafearz_${keshbafCount}" step="any" />
-        <button type="button" onclick="removeKeshbaf(this)">❌ حذف</button>
+        <input type="number" class="keshbafearz" step="any">
+
+        <button type="button" onclick="this.parentElement.remove()">❌ حذف</button>
       `;
       keshbafContainer.appendChild(div);
     }
 
-    function removeKeshbaf(btn) {
-      btn.parentElement.remove();
-    }
-
     function calculate() {
-      let tool = parseFloat(document.getElementById('tool').value) || 0;
-      let arz = parseFloat(document.getElementById('arz').value) || 0;
-      let toole = parseFloat(document.getElementById('toole').value) || 0;
-      let arze = parseFloat(document.getElementById('arze').value) || 0;
-      let astin = parseFloat(document.getElementById('astin').value) || 0;
-      let astinarz = parseFloat(document.getElementById('astinarz').value) || 0;
-      let keshbafPrice = parseFloat(document.getElementById('keshbafPrice').value) || 0;
+      let tool = +document.getElementById('tool').value || 0;
+      let arz = +document.getElementById('arz').value || 1;
+      let toole = +document.getElementById('toole').value || 0;
+      let arze = +document.getElementById('arze').value || 0;
+      let astin = +document.getElementById('astin').value || 0;
+      let astinarz = +document.getElementById('astinarz').value || 0;
+      let keshbafPrice = +document.getElementById('keshbafPrice').value || 0;
 
+      let astinPrice = (astin * tool) * (astinarz / arz);
 
-      // محاسبه آستین (جدید)
-      let astinGheymat = (astin * tool) * (astinarz / arz);
-
-      // محاسبه کلاه (در صورت وجود)
-      let kolah = 0;
-      if (parseInt(document.getElementById('hasKolah').value) === 0) {
-        let tkolah = parseFloat(document.getElementById('tkolah').value) || 0;
-        let akolah = parseFloat(document.getElementById('akolah').value) || 0;
-        kolah = (tkolah * tool) * (akolah / arz);
+      let kolahPrice = 0;
+      if (kolahToggle.value == 0) {
+        let tkolah = +document.getElementById('tkolah').value || 0;
+        let akolah = +document.getElementById('akolah').value || 0;
+        kolahPrice = (tkolah * tool) * (akolah / arz);
       }
 
-      // قیمت پارچه اصلی
-      let ghimatParche = (toole * tool) * (arze / arz) + astinGheymat + kolah;
+      let parchePrice = (toole * tool) * (arze / arz) + astinPrice + kolahPrice;
 
-      // جمع تمام کشباف‌ها
-      let keshbaf = 0;
-      const items = document.querySelectorAll('.keshbaf-item');
-      items.forEach((item) => {
-        const keshbafe = parseFloat(item.querySelector(`[id^="keshbafe_"]`).value) || 0;
-        const keshbafearz = parseFloat(item.querySelector(`[id^="keshbafearz_"]`).value) || 0;
-        keshbaf += (keshbafPrice * keshbafe) * (keshbafearz / 0.63);
+      let keshbafTotalPrice = 0;
+      document.querySelectorAll('.keshbaf-item').forEach(item => {
+        let t = +item.querySelector('.keshbafe').value || 0;
+        let a = +item.querySelector('.keshbafearz').value || 0;
+        keshbafTotalPrice += (keshbafPrice * t) * (a / 0.63);
       });
 
-      ghimatParche += keshbaf;
+      let barchasb = +document.getElementById('barchasb').value || 0;
+      if (barchasb > 0) barchasb = (barchasb * 1.2) + 5;
 
-      // برچسب و دوخت
-      let barchasb = parseFloat(document.getElementById('barchasb').value) || 0;
-      if (barchasb !== 0) {
-        barchasb = (barchasb * 1.2) + 5;
-      }
+      let dookht = +document.getElementById('dookht').value || 0;
 
-      let dookht = parseFloat(document.getElementById('dookht').value) || 0;
-      let total = dookht + barchasb + ghimatParche;
+      let total = parchePrice + keshbafTotalPrice + barchasb + dookht;
 
       document.getElementById('result').innerHTML = `
-  <p><strong>قیمت پارچه (بدون کشباف):</strong> ${(ghimatParche - keshbafTotalPrice).toFixed(2)}</p>
-  <p><strong>قیمت کشباف:</strong> ${keshbafTotalPrice.toFixed(2)}</p>
-  <p><strong>قیمت کل:</strong> ${total.toFixed(2)}</p>
-  <p>🔹 تعداد کشباف‌ها: ${items.length}</p>
-  <p>🎩 کلاه: ${kolah > 0 ? kolah.toFixed(2) + ' (دارد)' : 'ندارد'}</p>
-  <p>👕 آستین: ${astinGheymat.toFixed(2)}</p>
-`;
-
+        <p><strong>قیمت پارچه:</strong> ${parchePrice.toFixed(2)}</p>
+        <p><strong>قیمت کشباف:</strong> ${keshbafTotalPrice.toFixed(2)}</p>
+        <p><strong>برچسب:</strong> ${barchasb.toFixed(2)}</p>
+        <p><strong>دوخت:</strong> ${dookht.toFixed(2)}</p>
+        <hr>
+        <p><strong>💰 قیمت کل:</strong> ${total.toFixed(2)}</p>
+      `;
     }
   </script>
-</body>
 
+</body>
 </html>
